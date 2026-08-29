@@ -241,9 +241,7 @@
   /* ---------- location ---------- */
   .loc{display:grid;gap:14px}
   .loc-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
-  .map-ph{height:200px;background:linear-gradient(140deg,#cfe8e3,#eef7f5);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#5b8a84}
-  .map-ph svg{opacity:.7}
-  .map-ph span{font-size:13px;font-weight:600}
+  .pier-photo{width:100%;height:220px;object-fit:cover;display:block;background:linear-gradient(140deg,#cfe8e3,#eef7f5)}
   .loc-body{padding:18px}
   .loc-body h3{margin:0 0 8px;font-size:18px}
   .loc-body p{margin:0;color:var(--muted);font-size:14.5px}
@@ -440,7 +438,7 @@
             <div class="fact"><b>3 катера</b><span>в одной точке причала</span></div>
             <div class="fact"><b>Поездки от 2 часов</b><span>стандартная длительность</span></div>
             <div class="fact"><b>Оплата перед поездкой</b><span>на причале, наличными или картой</span></div>
-            <div class="fact"><b>Отправление с причала</b><span>адрес уточняется</span></div>
+            <div class="fact"><b>Отправление с причала</b><span>Набережная реки Мойки, 44</span></div>
           </div>
         </div>
       </div>
@@ -484,7 +482,6 @@
             <thead><tr><th>Катер</th><th>Длительность</th><th>Цена</th></tr></thead>
             <tbody id="priceRows"></tbody>
           </table>
-          <p class="price-note">Цена указана для демонстрации прототипа. Реальные тарифы уточняются.</p>
         </div>
       </div>
     </section>
@@ -586,20 +583,17 @@
       <div class="wrap">
         <div class="sec-head">
           <h2>Место отправления</h2>
-          <p>Поездка начинается с причала. Реальный адрес в прототипе не используется.</p>
+          <p>Поездка начинается с причала на набережной реки Мойки.</p>
         </div>
         <div class="loc">
           <div class="loc-card">
-            <div class="map-ph">
-              <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#5b8a84" stroke-width="1.8">
-                <path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11Z"/>
-                <circle cx="12" cy="10" r="2.5"/>
-              </svg>
-              <span>Карта-заглушка</span>
-            </div>
+            <img class="pier-photo" src="img/pier.png" alt="Причал на набережной реки Мойки" loading="lazy">
             <div class="loc-body">
-              <span class="addr">Причал, адрес уточняется</span>
-              <p>Как добраться (placeholder): подъехать к причалу, припарковаться на ближайшей стоянке, спуститься к воде. Катера стоят на пирсе, вас встретит капитан. Точная инструкция появится после подключения реального адреса.</p>
+              <span class="addr">Причал · Набережная реки Мойки, 44</span>
+              <p>Подъехать к причалу, припарковаться на ближайшей стоянке и спуститься к воде. Катера стоят на пирсе, вас встретит капитан.</p>
+              <p style="margin-top:10px">
+                <a class="btn btn-primary btn-mini" href="https://yandex.ru/maps/-/CTHoAP-o" target="_blank" rel="noopener">Открыть на Яндекс Картах</a>
+              </p>
             </div>
           </div>
         </div>
@@ -635,7 +629,7 @@
           </details>
           <details>
             <summary>Где начинается поездка?</summary>
-            <p>С причала. Адрес в прототипе указан как placeholder и уточняется. Смотрите блок «Место отправления».</p>
+            <p>С причала на набережной реки Мойки, 44. Точное место и карта — в блоке «Место отправления».</p>
           </details>
         </div>
       </div>
@@ -751,13 +745,12 @@
 
   /* ---------- данные прототипа (все условные) ---------- */
   var BOATS = [
-    {id:1, name:"Катер 1", cap:"6 человек (условно, placeholder)", price:3000},
-    {id:2, name:"Катер 2", cap:"6 человек (условно, placeholder)", price:3200},
-    {id:3, name:"Катер 3", cap:"6 человек (условно, placeholder)", price:3000}
+    {id:1, name:"Катер 1", cap:"6 человек", price:3000},
+    {id:2, name:"Катер 2", cap:"6 человек", price:3200},
+    {id:3, name:"Катер 3", cap:"6 человек", price:3000}
   ];
   var TIMES = [10,12,14,16,18];
   var DUR = 2;
-  var PRICE_NOTE = "Цена указана для демонстрации прототипа";
   var ST_LABEL = {new:"Заявка", confirmed:"Подтверждена", arrived:"На месте", done:"Завершена", noshow:"Не пришёл"};
   var BLOCK_REASONS = ["Техобслуживание","Плохая погода","Выходной"];
 
@@ -1437,7 +1430,7 @@
       '<div class="row"><span>Время</span><b>'+tLabel(S.time)+'</b></div>' +
       '<div class="row"><span>Длительность</span><b>2 часа</b></div>' +
       '<div class="row"><span>Цена</span><b>'+fmtMoney(b.price)+'</b></div>' +
-      '<div class="row"><span>Отправление</span><b>Причал, адрес уточняется</b></div>';
+      '<div class="row"><span>Отправление</span><b>Причал · Набережная реки Мойки, 44</b></div>';
   }
 
   function renderBoatsSection(){
@@ -1453,7 +1446,7 @@
             '<span>Вместимость: <b>'+b.cap+'</b></span>' +
             '<span>Длительность аренды: <b>от 2 часов</b></span>' +
           '</div>' +
-          '<div class="boat-price">'+fmtMoney(b.price)+' <small>'+PRICE_NOTE+'</small></div>' +
+          '<div class="boat-price">'+fmtMoney(b.price)+'</div>' +
           '<a class="btn btn-primary" href="#booking">Посмотреть свободное время</a>' +
         '</div></div>';
     }
