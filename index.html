@@ -1,0 +1,1552 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Катер Аренда — аренда катеров без звонков и переписки (демо-прототип)</title>
+<style>
+  :root{
+    --bg:#f2f9f7;
+    --card:#ffffff;
+    --ink:#12312f;
+    --muted:#5a7371;
+    --line:#dcebe7;
+    --primary:#0e8a86;
+    --primary-600:#0b6f6c;
+    --primary-soft:#e3f4f2;
+    --accent:#f0a21b;
+    --accent-soft:#fdf1dc;
+    --busy:#eef1f0;
+    --busy-ink:#97a3a1;
+    --ok:#0f9d58;
+    --ok-soft:#e6f6ec;
+    --warn:#b45309;
+    --warn-soft:#fef3c7;
+    --radius:16px;
+    --shadow:0 2px 10px rgba(18,49,47,.06);
+    --red:#c62828;
+    --red-soft:#fdeaea;
+    --ind:#4f46e5;
+    --ind-soft:#eef2ff;
+  }
+  *{box-sizing:border-box}
+  html{scroll-behavior:smooth}
+  body{
+    margin:0;
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.5;
+    -webkit-font-smoothing:antialiased;
+  }
+  img{max-width:100%}
+  .wrap{max-width:1024px;margin:0 auto;padding:0 16px}
+  .hidden{display:none !important}
+
+  /* ---------- banner ---------- */
+  .topbanner{
+    background:var(--warn-soft);
+    color:var(--warn);
+    text-align:center;
+    font-size:13px;
+    padding:8px 16px;
+    font-weight:600;
+  }
+
+  /* ---------- header ---------- */
+  header.site{
+    position:sticky;top:0;z-index:50;
+    background:rgba(255,255,255,.92);
+    backdrop-filter:blur(6px);
+    border-bottom:1px solid var(--line);
+  }
+  .header-in{
+    display:flex;align-items:center;gap:12px;
+    padding:10px 16px;max-width:1024px;margin:0 auto;
+  }
+  .logo{
+    display:flex;align-items:center;gap:8px;
+    font-weight:800;font-size:17px;color:var(--ink);
+    text-decoration:none;
+  }
+  .logo svg{display:block}
+  .header-in .spacer{flex:1}
+  .nav-links{display:flex;gap:16px;font-size:14px;font-weight:600}
+  .nav-links a{color:var(--primary-600);text-decoration:none}
+  .nav-links a:hover{text-decoration:underline}
+  .nav-links a.link-admin{color:#9aa6a3;font-weight:500;cursor:pointer}
+  .nav-links a.link-admin:hover{text-decoration:underline;color:#7d8a88}
+
+  /* ---------- buttons ---------- */
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    border:none;cursor:pointer;
+    font:inherit;font-weight:700;font-size:16px;
+    padding:14px 22px;border-radius:14px;
+    text-decoration:none;transition:background .15s,transform .05s;
+  }
+  .btn:active{transform:translateY(1px)}
+  .btn-primary{background:var(--primary);color:#fff}
+  .btn-primary:hover{background:var(--primary-600)}
+  .btn-accent{background:var(--accent);color:#3a2a00}
+  .btn-accent:hover{background:#e0910b}
+  .btn-ghost{background:transparent;color:var(--primary-600);border:1.5px solid var(--primary)}
+  .btn-ghost:hover{background:var(--primary-soft)}
+  .btn-block{width:100%}
+  .btn:disabled{background:var(--busy);color:var(--busy-ink);cursor:not-allowed}
+  .btn-mini{padding:9px 13px;font-size:13px;border-radius:10px}
+  .btn-danger{background:var(--red-soft);color:var(--red);border:1.5px solid #eec4c4}
+  .btn-danger:hover{background:#fbdada}
+
+  /* ---------- sections ---------- */
+  section{padding:40px 0}
+  .sec-head{max-width:640px;margin:0 auto 24px;text-align:center}
+  .sec-head h2{margin:0 0 8px;font-size:26px}
+  .sec-head p{margin:0;color:var(--muted)}
+  .demo-note{
+    display:flex;gap:8px;align-items:center;justify-content:center;
+    background:var(--warn-soft);border:1px solid #f6d78c;
+    color:var(--warn);border-radius:12px;
+    padding:10px 14px;font-size:13.5px;font-weight:600;
+    margin:12px auto;max-width:640px;
+  }
+
+  /* ---------- hero ---------- */
+  .hero{background:
+    radial-gradient(1200px 400px at 50% -10%, #d8f0ec 0%, rgba(216,240,236,0) 60%),
+    var(--bg);
+    padding:48px 0 40px}
+  .hero .wrap{display:grid;gap:28px}
+  .hero h1{margin:0 0 12px;font-size:32px;line-height:1.15}
+  .hero p.lead{margin:0 0 20px;color:var(--muted);font-size:17px;max-width:560px}
+  .hero .cta-row{display:flex;flex-wrap:wrap;gap:12px;align-items:center}
+  .hero-media{display:grid;gap:14px;align-content:start}
+  .hero-photo{border-radius:20px;overflow:hidden;box-shadow:var(--shadow)}
+  .hero-photo img{width:100%;aspect-ratio:4/3;object-fit:cover;display:block}
+  .hero-facts{display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:10px;margin-top:8px}
+  .fact{background:var(--card);border:1px solid var(--line);border-radius:14px;padding:12px 14px}
+  .fact b{display:block;font-size:15px}
+  .fact span{font-size:13px;color:var(--muted)}
+
+  /* ---------- how ---------- */
+  .steps{display:grid;gap:12px}
+  .step-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;display:flex;gap:14px;align-items:flex-start}
+  .step-num{flex:none;width:34px;height:34px;border-radius:50%;background:var(--primary-soft);color:var(--primary-600);font-weight:800;display:flex;align-items:center;justify-content:center}
+  .step-card b{display:block;margin-bottom:2px}
+  .step-card span{color:var(--muted);font-size:14px}
+
+  /* ---------- boats ---------- */
+  .boats{display:grid;gap:14px}
+  .boat-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden;display:flex;flex-direction:column}
+  .boat-photo{
+    width:100%;aspect-ratio:16/9;object-fit:cover;display:block;
+    background:linear-gradient(160deg,#bfe3dc,#eaf7f4);
+  }
+  .boat-body{padding:16px;display:flex;flex-direction:column;gap:10px;flex:1}
+  .boat-body h3{margin:0;font-size:18px}
+  .boat-specs{display:grid;gap:4px;font-size:14px;color:var(--muted)}
+  .boat-specs b{color:var(--ink)}
+  .boat-price{margin-top:auto;font-size:22px;font-weight:800}
+  .boat-price small{display:block;font-size:12px;color:var(--muted);font-weight:500}
+
+  /* ---------- price ---------- */
+  .price-box{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+  .price-table{width:100%;border-collapse:collapse}
+  .price-table td,.price-table th{text-align:left;padding:10px 8px;border-bottom:1px solid var(--line)}
+  .price-table th{font-size:13px;color:var(--muted);font-weight:600}
+  .price-table tr:last-child td{border-bottom:none}
+  .price-table td:last-child{text-align:right;font-weight:700;white-space:nowrap}
+  .price-note{margin:14px 0 0;font-size:13.5px;color:var(--warn);background:var(--warn-soft);border-radius:10px;padding:10px 14px}
+
+  /* ---------- wizard ---------- */
+  .wizard{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px;max-width:680px;margin:0 auto}
+  .progress{display:flex;gap:6px;justify-content:center;margin-bottom:20px;flex-wrap:wrap}
+  .pstep{display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted)}
+  .pstep .dot{width:22px;height:22px;border-radius:50%;border:2px solid var(--line);display:flex;align-items:center;justify-content:center;font-weight:800;font-size:12px}
+  .pstep.active{color:var(--ink);font-weight:700}
+  .pstep.active .dot{border-color:var(--primary);background:var(--primary);color:#fff}
+  .pstep.done .dot{border-color:var(--primary);background:var(--primary-soft);color:var(--primary-600)}
+  .step h3{margin:0 0 14px;font-size:19px}
+  .step .sub{color:var(--muted);font-size:14px;margin:0 0 14px}
+
+  .date-chips{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;-webkit-overflow-scrolling:touch}
+  .date-chip{
+    flex:none;min-width:74px;padding:10px 8px;border-radius:14px;border:1.5px solid var(--line);
+    background:#fff;cursor:pointer;text-align:center;font-family:inherit;
+  }
+  .date-chip:hover{border-color:var(--primary)}
+  .date-chip .wd{font-size:12px;color:var(--muted);display:block}
+  .date-chip .d{font-size:18px;font-weight:800;display:block}
+  .date-chip .mo{font-size:12px;color:var(--muted);display:block}
+  .date-chip.sel{border-color:var(--primary);background:var(--primary-soft)}
+  .date-chip.sel .d{color:var(--primary-600)}
+
+  .slot-grid{display:grid;gap:10px}
+  .slot{
+    display:flex;align-items:center;justify-content:space-between;gap:10px;
+    padding:14px 16px;border-radius:14px;border:1.5px solid var(--line);background:#fff;
+    cursor:pointer;font-family:inherit;font-size:15px;width:100%;
+  }
+  .slot:hover{border-color:var(--primary)}
+  .slot .st{font-size:12.5px;font-weight:700}
+  .slot.free .st{color:var(--ok);background:var(--ok-soft);padding:2px 10px;border-radius:999px}
+  .slot.busy{background:var(--busy);border-color:transparent;color:var(--busy-ink);cursor:not-allowed}
+  .slot.busy .st{background:#dde3e1;padding:2px 10px;border-radius:999px;color:#6f7d7b}
+  .slot.sel{border-color:var(--primary);background:var(--primary-soft)}
+  .slot.sel .st{background:var(--primary);color:#fff;padding:2px 10px;border-radius:999px}
+
+  .boat-rows{display:grid;gap:10px}
+  .boat-row{
+    display:flex;align-items:center;gap:12px;padding:14px;border-radius:14px;
+    border:1.5px solid var(--line);background:#fff;width:100%;font-family:inherit;text-align:left;
+  }
+  .boat-row .nm{font-weight:800;font-size:15px}
+  .boat-row .pr{color:var(--muted);font-size:13px}
+  .boat-row .st{margin-left:auto;font-size:12.5px;font-weight:700;padding:3px 12px;border-radius:999px;flex:none}
+  .boat-row.free{cursor:pointer}
+  .boat-row.free:hover{border-color:var(--primary)}
+  .boat-row.free .st{background:var(--ok-soft);color:var(--ok)}
+  .boat-row.busy{background:var(--busy);border-color:transparent;color:var(--busy-ink);cursor:not-allowed}
+  .boat-row.busy .st{background:#dde3e1;color:#6f7d7b}
+  .boat-row.sel{border-color:var(--primary);background:var(--primary-soft)}
+  .boat-row.sel .st{background:var(--primary);color:#fff}
+  .auto-row{margin-top:4px;text-align:center}
+  .auto-row .btn{padding:10px 18px;font-size:14px}
+
+  .step-nav{display:flex;gap:10px;margin-top:18px;flex-wrap:wrap}
+  .step-nav .btn{flex:1;min-width:150px}
+
+  /* form */
+  .field{margin-bottom:14px}
+  .field label{display:block;font-size:13.5px;font-weight:700;margin-bottom:6px}
+  .field input,.field select{
+    width:100%;padding:13px 14px;border:1.5px solid var(--line);border-radius:12px;
+    font:inherit;font-size:16px;background:#fff;color:var(--ink);
+  }
+  .field input:focus,.field select:focus{outline:none;border-color:var(--primary)}
+  .field .err{color:var(--red);font-size:12.5px;margin-top:4px;display:none}
+  .field.invalid input,.field.invalid select{border-color:var(--red)}
+  .field.invalid .err{display:block}
+  .summary{background:var(--primary-soft);border-radius:12px;padding:12px 14px;margin-bottom:14px;font-size:14px;display:grid;gap:4px}
+  .summary b{color:var(--primary-600)}
+
+  /* confirmation */
+  .conf-ok{background:var(--ok-soft);color:var(--ok);border-radius:14px;padding:14px;text-align:center;font-weight:800;margin-bottom:14px}
+  .conf-card{background:var(--primary-soft);border-radius:14px;padding:16px;display:grid;gap:8px;font-size:15px}
+  .conf-card .row{display:flex;justify-content:space-between;gap:12px}
+  .conf-card .row span{color:var(--muted)}
+  .conf-card .row b{color:var(--ink);text-align:right}
+  .conf-extra{margin-top:14px;font-size:14px;color:var(--muted);text-align:center}
+
+  /* ---------- location ---------- */
+  .loc{display:grid;gap:14px}
+  .loc-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
+  .map-ph{height:200px;background:linear-gradient(140deg,#cfe8e3,#eef7f5);display:flex;flex-direction:column;align-items:center;justify-content:center;gap:8px;color:#5b8a84}
+  .map-ph svg{opacity:.7}
+  .map-ph span{font-size:13px;font-weight:600}
+  .loc-body{padding:18px}
+  .loc-body h3{margin:0 0 8px;font-size:18px}
+  .loc-body p{margin:0;color:var(--muted);font-size:14.5px}
+  .loc-body .addr{background:var(--warn-soft);color:var(--warn);border-radius:10px;padding:10px 14px;font-weight:600;font-size:14px;margin-bottom:10px;display:inline-block}
+
+  /* ---------- faq ---------- */
+  .faq{display:grid;gap:10px;max-width:680px;margin:0 auto}
+  details{background:var(--card);border:1px solid var(--line);border-radius:14px;overflow:hidden}
+  summary{cursor:pointer;padding:15px 18px;font-weight:700;font-size:15px;list-style:none;display:flex;justify-content:space-between;align-items:center;gap:10px}
+  summary::after{content:"+";font-size:20px;color:var(--primary);font-weight:400}
+  details[open] summary::after{content:"\2212"}
+  details p{margin:0;padding:0 18px 16px;color:var(--muted);font-size:14.5px}
+
+  /* ---------- footer ---------- */
+  footer.site{border-top:1px solid var(--line);background:var(--card);padding:28px 0;margin-top:20px}
+  .foot{display:grid;gap:10px;color:var(--muted);font-size:13.5px;text-align:center}
+  .foot a{color:var(--primary-600);font-weight:600;text-decoration:none}
+  .foot a:hover{text-decoration:underline}
+
+  /* ---------- ADMIN: общий вид ---------- */
+  .team{display:none}
+  body.show-team .team{display:block}
+  body.show-team #client{display:none}
+  .team-head{
+    background:linear-gradient(90deg,#3b2f5f,#5a3d8f);color:#fff;
+    padding:14px 0;
+  }
+  .team-head .inner{max-width:1100px;margin:0 auto;padding:0 16px;display:flex;align-items:center;gap:12px;flex-wrap:wrap}
+  .team-head h1{margin:0;font-size:18px;flex:1;min-width:160px}
+  .team-head .badge-team{background:rgba(255,255,255,.2);border:1px solid rgba(255,255,255,.5);padding:3px 10px;border-radius:999px;font-size:11.5px;font-weight:700;letter-spacing:.03em}
+  .team-body{padding:24px 0 60px;background:#f4f2f8;min-height:80vh}
+  .team-note{background:var(--warn-soft);color:var(--warn);border:1px solid #f6d78c;border-radius:12px;padding:10px 14px;font-size:13.5px;font-weight:600;margin-bottom:16px}
+  .back-link{display:inline-block;margin-bottom:14px;font-weight:700;color:#5a3d8f;text-decoration:none;font-size:14px}
+  .back-link:hover{text-decoration:underline}
+
+  .role-tabs{display:flex;gap:8px;margin-bottom:16px;flex-wrap:wrap}
+  .role-tabs button{font:inherit;font-weight:700;border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:10px 16px;cursor:pointer}
+  .role-tabs button.active{background:#5a3d8f;border-color:#5a3d8f;color:#fff}
+  .role-captain-only{display:none !important}
+  .role-captain .role-captain-only{display:flex !important}
+  .role-captain .role-captain-only.note-muted{display:block !important}
+
+  .team-controls{display:flex;align-items:center;gap:10px;flex-wrap:wrap;margin-bottom:12px}
+  .team-controls .date-label{font-weight:800;font-size:16px;flex:1;text-align:center;min-width:150px}
+  .team-controls button{font:inherit;font-weight:700;border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:9px 14px;cursor:pointer}
+  .team-controls button:hover{border-color:#8f7bbf}
+
+  .week-strip{display:flex;gap:8px;overflow-x:auto;padding-bottom:6px;margin-bottom:14px;-webkit-overflow-scrolling:touch}
+  .week-chip{flex:none;min-width:64px;padding:9px 6px;border-radius:12px;border:1.5px solid var(--line);background:#fff;text-align:center;cursor:pointer;font-family:inherit;font-size:12.5px}
+  .week-chip .d{display:block;font-size:16px;font-weight:800}
+  .week-chip.sel{border-color:#5a3d8f;background:#ede8f6}
+  .week-chip.sel .d{color:#5a3d8f}
+  .week-chip.today .wd{color:var(--primary-600)}
+
+  .admin-tabs{display:flex;gap:8px;margin:16px 0;flex-wrap:wrap}
+  .admin-tabs button{font:inherit;font-weight:700;border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:10px 16px;cursor:pointer}
+  .admin-tabs button.active{background:#0e8a86;border-color:#0e8a86;color:#fff}
+
+  .admin-actions{display:flex;gap:10px;flex-wrap:wrap;margin:14px 0}
+  .role-captain .admin-only{display:none !important}
+
+  .team-legend{display:flex;gap:14px;font-size:12.5px;color:var(--muted);margin-bottom:12px;flex-wrap:wrap}
+  .team-legend i{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:5px}
+
+  .team-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border:1px solid var(--line);border-radius:14px;background:#fff}
+  table.team-grid{border-collapse:collapse;width:100%;min-width:720px;font-size:13.5px}
+  .team-grid th,.team-grid td{border:1px solid var(--line);padding:10px 12px;vertical-align:top}
+  .team-grid thead th{background:#f4f2f8;font-size:13px;position:sticky;top:0}
+  .team-grid th.time-col,.team-grid td.time-col{
+    position:sticky;left:0;background:#faf9fd;font-weight:800;white-space:nowrap;z-index:2;
+  }
+  .team-grid thead th.time-col{z-index:3}
+  .cell{
+    display:block;width:100%;text-align:left;font-family:inherit;font-size:13px;
+    border:none;background:transparent;cursor:pointer;padding:0;color:inherit;
+  }
+  .cell .who{font-weight:700;font-size:13.5px}
+  .cell .ph{color:var(--muted);font-size:12.5px}
+  .cell.free .who{color:#9aa6a3;font-weight:600;font-size:13px}
+  .cell.blocked{color:#6f5d44}
+  .cell.blocked .who{color:#8a6d3b}
+  td.has-blocked{background:repeating-linear-gradient(45deg,#faf6ef,#faf6ef 6px,#f2ead9 6px,#f2ead9 12px)}
+  td.has-booked{background:var(--ok-soft)}
+  td.has-booked.s-new{background:var(--ind-soft)}
+  td.has-booked.s-arrived{background:var(--primary-soft)}
+  td.has-booked.s-done{background:var(--busy)}
+  td.has-booked.s-noshow{background:var(--red-soft)}
+  .status{display:inline-block;font-size:11px;font-weight:700;padding:2px 9px;border-radius:999px;margin-top:4px}
+  .status.new{background:var(--ind-soft);color:var(--ind)}
+  .status.confirmed{background:var(--ok-soft);color:var(--ok)}
+  .status.arrived{background:var(--primary-soft);color:var(--primary-600)}
+  .status.done{background:var(--busy);color:var(--busy-ink)}
+  .status.noshow{background:var(--red-soft);color:var(--red)}
+
+  .team-summary{margin-top:14px;font-size:14px;color:var(--muted);background:#fff;border:1px solid var(--line);border-radius:12px;padding:12px 14px}
+  .team-summary b{color:var(--ink)}
+
+  /* вкладка Брони */
+  .bookings-table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;font-size:13.5px}
+  .bookings-table th,.bookings-table td{border-bottom:1px solid var(--line);padding:10px 10px;text-align:left;vertical-align:middle}
+  .bookings-table th{background:#f4f2f8;font-size:12.5px;color:var(--muted)}
+  .bookings-table tr:last-child td{border-bottom:none}
+  .bookings-table .empty{text-align:center;color:var(--muted);padding:24px}
+  .bk-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch;border-radius:14px}
+
+  /* вкладка Клиенты */
+  .clients-table{width:100%;border-collapse:collapse;background:#fff;border:1px solid var(--line);border-radius:14px;overflow:hidden;font-size:13.5px}
+  .clients-table th,.clients-table td{border-bottom:1px solid var(--line);padding:10px 10px;text-align:left}
+  .clients-table th{background:#f4f2f8;font-size:12.5px;color:var(--muted)}
+  .clients-table tr:last-child td{border-bottom:none}
+
+  /* modal */
+  .modal{position:fixed;inset:0;background:rgba(18,49,47,.45);display:none;align-items:flex-end;justify-content:center;z-index:100}
+  .modal.open{display:flex}
+  .modal-box{background:#fff;width:100%;max-width:560px;max-height:90vh;overflow:auto;border-radius:20px 20px 0 0;padding:22px}
+  .modal-box h3{margin:0 0 14px;font-size:18px}
+  .modal-close{position:absolute;right:16px;top:14px;background:none;border:none;font-size:24px;cursor:pointer;color:var(--muted)}
+  .modal-box .kv{display:grid;gap:4px;margin-bottom:14px;background:var(--primary-soft);border-radius:12px;padding:12px 14px;font-size:14px}
+  .modal-box .kv .row{display:flex;justify-content:space-between;gap:12px}
+  .modal-box .kv .row span{color:var(--muted)}
+  .modal-box .kv .row b{text-align:right}
+  .modal-actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:6px}
+  .modal-err{color:var(--red);font-size:13px;font-weight:600;background:var(--red-soft);border-radius:10px;padding:10px 12px;margin:10px 0;display:none}
+  .modal-err.show{display:block}
+  .note-muted{font-size:12.5px;color:var(--muted);margin-top:12px}
+
+  /* toast */
+  .toast{
+    position:fixed;left:50%;bottom:20px;transform:translateX(-50%) translateY(20px);
+    background:#12312f;color:#fff;padding:12px 18px;border-radius:12px;font-size:14px;font-weight:600;
+    opacity:0;pointer-events:none;transition:opacity .2s,transform .2s;z-index:200;max-width:90vw;text-align:center;
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+  /* ---------- responsive ---------- */
+  @media(min-width:760px){
+    section{padding:56px 0}
+    .hero h1{font-size:44px}
+    .steps{grid-template-columns:repeat(3,1fr)}
+    .boats{grid-template-columns:repeat(3,1fr)}
+    .hero .wrap{grid-template-columns:1.1fr .9fr;align-items:center}
+    .hero-facts{grid-template-columns:1fr 1fr}
+    .loc{grid-template-columns:1fr 1fr;align-items:stretch}
+    .price-table td:first-child{padding-left:8px}
+    .modal{align-items:center}
+    .modal-box{border-radius:20px}
+  }
+</style>
+</head>
+<body>
+
+<div id="client">
+
+  <div class="topbanner">ДЕМО-ПРОТОТИП · Реальная система бронирования не подключена</div>
+
+  <header class="site">
+    <div class="header-in">
+      <a class="logo" href="#top" aria-label="Катер Аренда">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none">
+          <path d="M12 3v7" stroke="#0e8a86" stroke-width="2" stroke-linecap="round"/>
+          <path d="M9.5 10h5" stroke="#0e8a86" stroke-width="2" stroke-linecap="round"/>
+          <path d="M2.5 20 L8.5 8 H15.5 L21.5 20 Z" fill="#0e8a86" opacity=".15" stroke="#0e8a86" stroke-width="1.5" stroke-linejoin="round"/>
+          <path d="M2 20 H22" stroke="#0e8a86" stroke-width="2" stroke-linecap="round"/>
+        </svg>
+        Катер Аренда
+      </a>
+      <div class="spacer"></div>
+      <nav class="nav-links">
+        <a href="#booking">Свободное время</a>
+        <a href="#boats">Катера</a>
+        <a href="#faq">Вопросы</a>
+        <a href="#" class="link-admin" id="adminLink" title="Только для команды: владелицы и капитанов">Админка</a>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+
+    <!-- 1. Первый экран -->
+    <section class="hero">
+      <div class="wrap">
+        <div>
+          <h1>Арендуйте катер без звонков и переписки</h1>
+          <p class="lead">Выберите удобное время, посмотрите цену и доступность катеров онлайн.</p>
+          <div class="cta-row">
+            <a class="btn btn-primary" href="#booking">Посмотреть свободное время</a>
+          </div>
+        </div>
+        <div class="hero-media">
+          <div class="hero-photo">
+            <img src="img/kater2.jpg" alt="Катер на воде" loading="eager">
+          </div>
+          <div class="hero-facts">
+            <div class="fact"><b>3 катера</b><span>в одной точке причала</span></div>
+            <div class="fact"><b>Поездки от 2 часов</b><span>стандартная длительность</span></div>
+            <div class="fact"><b>Оплата перед поездкой</b><span>на причале, наличными или картой</span></div>
+            <div class="fact"><b>Отправление с причала</b><span>адрес уточняется</span></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2. Как это работает -->
+    <section id="how">
+      <div class="wrap">
+        <div class="sec-head">
+          <h2>Как это работает</h2>
+          <p>Три простых шага — без звонков и регистрации.</p>
+        </div>
+        <div class="steps">
+          <div class="step-card"><div class="step-num">1</div><div><b>Выберите дату и время</b><span>Смотрите свободные и занятые слоты сразу.</span></div></div>
+          <div class="step-card"><div class="step-num">2</div><div><b>Выберите свободный катер</b><span>Или подберите любой свободный автоматически.</span></div></div>
+          <div class="step-card"><div class="step-num">3</div><div><b>Оставьте контакты и получите подтверждение</b><span>Оплата — на месте, перед поездкой.</span></div></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 3. Катера -->
+    <section id="boats">
+      <div class="wrap">
+        <div class="sec-head">
+          <h2>Катера</h2>
+          <p>Три похожих катера, вместимость указана условно для прототипа.</p>
+        </div>
+        <div class="boats" id="boatsList"><!-- рендерится JS --></div>
+      </div>
+    </section>
+
+    <!-- 4. Цена -->
+    <section id="price">
+      <div class="wrap">
+        <div class="sec-head">
+          <h2>Цена</h2>
+          <p>Стоимость видна заранее — до выбора времени.</p>
+        </div>
+        <div class="price-box">
+          <table class="price-table">
+            <thead><tr><th>Катер</th><th>Длительность</th><th>Цена</th></tr></thead>
+            <tbody id="priceRows"></tbody>
+          </table>
+          <p class="price-note">Цена указана для демонстрации прототипа. Реальные тарифы уточняются.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5. Календарь и выбор времени -->
+    <section id="booking">
+      <div class="wrap">
+        <div class="sec-head">
+          <h2>Выберите свободное время</h2>
+          <p>Дата → время → катер. Занятые слоты помечены, цена видна сразу.</p>
+        </div>
+
+        <div class="demo-note">Демо-прототип. Форма бронирования пока не подключена — данные никуда не отправляются и бронь не создаётся.</div>
+
+        <div class="wizard">
+          <div class="progress">
+            <div class="pstep active" id="ps1"><div class="dot">1</div>Дата</div>
+            <div class="pstep" id="ps2"><div class="dot">2</div>Время</div>
+            <div class="pstep" id="ps3"><div class="dot">3</div>Катер</div>
+            <div class="pstep" id="ps4"><div class="dot">4</div>Контакты</div>
+          </div>
+
+          <!-- Шаг 1: дата -->
+          <div class="step" id="step1">
+            <h3>Шаг 1. Выберите дату</h3>
+            <p class="sub">Доступны ближайшие 14 дней.</p>
+            <div class="date-chips" id="dateChips"></div>
+            <div class="step-nav">
+              <button class="btn btn-primary" id="toStep2" disabled>Продолжить — демо</button>
+            </div>
+          </div>
+
+          <!-- Шаг 2: время -->
+          <div class="step hidden" id="step2">
+            <h3>Шаг 2. Выберите время</h3>
+            <p class="sub">Поездка длится 2 часа. Занятые слоты отмечены серым.</p>
+            <div class="slot-grid" id="slotGrid"></div>
+            <div class="step-nav">
+              <button class="btn btn-ghost" id="backToStep1">Назад</button>
+              <button class="btn btn-primary" id="toStep3" disabled>Продолжить — демо</button>
+            </div>
+          </div>
+
+          <!-- Шаг 3: катер -->
+          <div class="step hidden" id="step3">
+            <h3>Шаг 3. Выберите катер</h3>
+            <p class="sub" id="step3Sub"></p>
+            <div class="boat-rows" id="boatRows"></div>
+            <div class="auto-row">
+              <button class="btn btn-ghost" id="autoBoat">Подобрать любой свободный катер</button>
+            </div>
+            <div class="step-nav">
+              <button class="btn btn-ghost" id="backToStep2">Назад</button>
+              <button class="btn btn-primary" id="toStep4" disabled>Продолжить — демо</button>
+            </div>
+          </div>
+
+          <!-- Шаг 4: форма -->
+          <div class="step hidden" id="step4">
+            <h3>Шаг 4. Оставьте контакты</h3>
+            <div class="summary" id="formSummary"></div>
+            <form id="contactForm" novalidate>
+              <div class="field" id="fName">
+                <label for="inpName">Имя</label>
+                <input id="inpName" type="text" autocomplete="name" placeholder="Как к вам обращаться">
+                <div class="err">Пожалуйста, укажите имя.</div>
+              </div>
+              <div class="field" id="fPhone">
+                <label for="inpPhone">Телефон</label>
+                <input id="inpPhone" type="tel" inputmode="tel" autocomplete="tel" placeholder="+7 900 000-00-00">
+                <div class="err">Пожалуйста, укажите телефон (от 10 цифр).</div>
+              </div>
+              <p class="price-note" style="margin-top:0">Это демонстрационный прототип. Введённые данные никуда не отправляются.</p>
+              <button class="btn btn-accent btn-block" type="submit" style="font-size:17px">Показать, как будет работать бронь</button>
+            </form>
+            <div class="step-nav">
+              <button class="btn btn-ghost" id="backToStep3">Назад</button>
+            </div>
+          </div>
+
+          <!-- Шаг 5: подтверждение -->
+          <div class="step hidden" id="step5">
+            <h3>Подтверждение бронирования</h3>
+            <div class="conf-ok">ДЕМО: бронь не создана, данные не отправлены.</div>
+            <p style="color:var(--muted);font-size:14px;text-align:center;margin:0 0 14px">Так будет выглядеть подтверждение бронирования после подключения системы. Сейчас это прототип: заявка не отправлена и бронь не создана.</p>
+            <div class="conf-card" id="confCard"></div>
+            <div class="conf-extra">Оплата производится на месте, перед поездкой, в точке отправления.</div>
+            <div class="step-nav">
+              <button class="btn btn-ghost" id="restart">Выбрать другое время</button>
+              <a class="btn btn-primary" href="#top">На главную</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8. Место отправления -->
+    <section id="location">
+      <div class="wrap">
+        <div class="sec-head">
+          <h2>Место отправления</h2>
+          <p>Поездка начинается с причала. Реальный адрес в прототипе не используется.</p>
+        </div>
+        <div class="loc">
+          <div class="loc-card">
+            <div class="map-ph">
+              <svg width="46" height="46" viewBox="0 0 24 24" fill="none" stroke="#5b8a84" stroke-width="1.8">
+                <path d="M12 21s-7-5.5-7-11a7 7 0 0 1 14 0c0 5.5-7 11-7 11Z"/>
+                <circle cx="12" cy="10" r="2.5"/>
+              </svg>
+              <span>Карта-заглушка</span>
+            </div>
+            <div class="loc-body">
+              <span class="addr">Причал, адрес уточняется</span>
+              <p>Как добраться (placeholder): подъехать к причалу, припарковаться на ближайшей стоянке, спуститься к воде. Катера стоят на пирсе, вас встретит капитан. Точная инструкция появится после подключения реального адреса.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9. FAQ -->
+    <section id="faq">
+      <div class="wrap">
+        <div class="sec-head">
+          <h2>Частые вопросы</h2>
+        </div>
+        <div class="faq">
+          <details>
+            <summary>Как узнать, свободен ли катер?</summary>
+            <p>Выберите дату в блоке «Выберите свободное время» — сразу будет видно свободные и занятые слоты по каждому катеру. Никаких звонков не нужно.</p>
+          </details>
+          <details>
+            <summary>Сколько длится поездка?</summary>
+            <p>Стандартная аренда — 2 часа. Слоты начинаются каждые 2 часа: 10:00, 12:00, 14:00, 16:00, 18:00.</p>
+          </details>
+          <details>
+            <summary>Когда нужно оплачивать?</summary>
+            <p>Оплата производится на месте, перед поездкой, в точке отправления.</p>
+          </details>
+          <details>
+            <summary>Нужна ли предоплата?</summary>
+            <p>Нет, предоплата не требуется. Сначала вы видите свободное время и цену, подтверждаете бронь и оплачиваете перед выходом на воду.</p>
+          </details>
+          <details>
+            <summary>Что происходит при плохой погоде?</summary>
+            <p>Условия переноса поездки из-за погоды уточняются при подтверждении брони.</p>
+          </details>
+          <details>
+            <summary>Где начинается поездка?</summary>
+            <p>С причала. Адрес в прототипе указан как placeholder и уточняется. Смотрите блок «Место отправления».</p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <footer class="site">
+    <div class="wrap foot">
+      <div>Катер Аренда · демо-прототип для проверки идеи самостоятельного бронирования</div>
+      <div>Все данные (цены, вместимость, расписание, адрес, брони) — условные и не являются реальными.</div>
+      <div><a href="#" id="teamLink">Админка: расписание для команды →</a></div>
+    </div>
+  </footer>
+</div>
+
+<!-- ---------- ЭКРАН КОМАНДЫ (макет админки) ---------- -->
+<div class="team" id="teamView">
+  <div class="team-head">
+    <div class="inner">
+      <h1>Расписание команды</h1>
+      <span class="badge-team">ДЕМО-МАКЕТ · реальной админки нет</span>
+    </div>
+  </div>
+  <div class="team-body">
+    <div class="wrap">
+      <a href="#" class="back-link" id="teamBack">← Вернуться на лендинг</a>
+
+      <div class="team-note">Это макет, а не рабочая админка: данные условные, изменения хранятся только до перезагрузки страницы, никуда не отправляются. Единая версия расписания — для владелицы и капитанов, чтобы избежать двойных броней.</div>
+
+      <!-- роли -->
+      <div class="role-tabs">
+        <button data-role="admin" class="active">Администратор (владелица)</button>
+        <button data-role="captain">Капитан</button>
+      </div>
+
+      <!-- даты -->
+      <div class="team-controls">
+        <button id="teamPrev">← Пред. день</button>
+        <span class="date-label" id="teamDateLabel"></span>
+        <button id="teamNext">След. день →</button>
+        <button id="teamToday">Сегодня</button>
+      </div>
+      <div class="week-strip" id="weekStrip"></div>
+
+      <!-- сводка -->
+      <div class="team-summary" id="teamSummary"></div>
+
+      <!-- вкладки (только админ) -->
+      <div class="admin-tabs admin-only" id="adminTabs">
+        <button data-tab="schedule" class="active">Расписание</button>
+        <button data-tab="bookings">Брони</button>
+        <button data-tab="clients">Клиенты</button>
+      </div>
+
+      <!-- вкладка Расписание -->
+      <div class="tab-pane" id="tab-schedule">
+        <div class="admin-actions admin-only">
+          <button class="btn btn-primary btn-mini" id="btnAddBooking">+ Добавить бронь</button>
+          <button class="btn btn-ghost btn-mini" id="btnBlockSlot">Заблокировать слот</button>
+        </div>
+        <div class="team-legend">
+          <span><i style="background:var(--ok)"></i>Подтверждена</span>
+          <span><i style="background:var(--ind)"></i>Заявка</span>
+          <span><i style="background:var(--primary)"></i>На месте</span>
+          <span><i style="background:#dde3e1"></i>Завершена / не пришёл</span>
+          <span><i style="background:repeating-linear-gradient(45deg,#f2ead9,#f2ead9 3px,#fff 3px,#fff 6px)"></i>Заблокировано</span>
+          <span><i style="background:#eaf4f2;border:1px solid #d8e9e5"></i>Свободно</span>
+        </div>
+        <div class="team-scroll">
+          <table class="team-grid">
+            <thead id="teamHead"></thead>
+            <tbody id="teamBody"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- вкладка Брони -->
+      <div class="tab-pane hidden" id="tab-bookings">
+        <div class="bk-scroll">
+          <table class="bookings-table">
+            <thead><tr><th>Время</th><th>Катер</th><th>Имя</th><th>Телефон</th><th>Статус</th><th></th></tr></thead>
+            <tbody id="bookingsList"></tbody>
+          </table>
+        </div>
+      </div>
+
+      <!-- вкладка Клиенты -->
+      <div class="tab-pane hidden" id="tab-clients">
+        <div class="bk-scroll">
+          <table class="clients-table">
+            <thead><tr><th>Имя</th><th>Телефон</th><th>Поездок</th><th>Последняя</th></tr></thead>
+            <tbody id="clientsList"></tbody>
+          </table>
+        </div>
+        <p class="note-muted">Справочник собран из условных данных макета — не реальная CRM.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- модальное окно -->
+<div class="modal" id="adminModal">
+  <div class="modal-box" id="modalBox"></div>
+</div>
+
+<!-- toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+(function(){
+  "use strict";
+
+  /* ---------- данные прототипа (все условные) ---------- */
+  var BOATS = [
+    {id:1, name:"Катер 1", cap:"6 человек (условно, placeholder)", price:3000},
+    {id:2, name:"Катер 2", cap:"6 человек (условно, placeholder)", price:3200},
+    {id:3, name:"Катер 3", cap:"6 человек (условно, placeholder)", price:3000}
+  ];
+  var TIMES = [10,12,14,16,18];
+  var DUR = 2;
+  var PRICE_NOTE = "Цена указана для демонстрации прототипа";
+  var ST_LABEL = {new:"Заявка", confirmed:"Подтверждена", arrived:"На месте", done:"Завершена", noshow:"Не пришёл"};
+  var BLOCK_REASONS = ["Техобслуживание","Плохая погода","Выходной"];
+
+  function boatById(id){ for (var i=0;i<BOATS.length;i++) if (BOATS[i].id===id) return BOATS[i]; return null; }
+  function fmtMoney(n){ return n.toLocaleString("ru-RU") + " ₽"; }
+  function tLabel(t){ return t + ":00–" + (t+DUR) + ":00"; }
+
+  /* ---------- «база данных» макета (только в памяти) ---------- */
+  var db = { bookings: [], blocks: [], nextId: 1 };
+
+  function hash(s){
+    var h = 2166136261;
+    for (var i=0;i<s.length;i++){ h ^= s.charCodeAt(i); h = Math.imul(h,16777619); }
+    return h >>> 0;
+  }
+  var NAMES = ["Анна","Игорь","Марина","Сергей","Ольга","Дмитрий","Елена","Павел","Наталья","Владимир"];
+  function mockBooking(dateStr, boatId, t){
+    var h = hash(dateStr+"|"+boatId+"|"+t);
+    return {
+      name: NAMES[h % NAMES.length],
+      phone: "+7 9" + (String(10 + (h>>1)%90)) + " " +
+             String(100 + (h>>4)%900) + "-" + String(10 + (h>>7)%90) + "-" + String(10 + (h>>9)%90),
+      status: (h % 10 < 6) ? "confirmed" : "new"
+    };
+  }
+  function seedDb(){
+    db.bookings = []; db.blocks = []; db.nextId = 1;
+    var today = new Date(); today.setHours(0,0,0,0);
+    for (var d=-40; d<=17; d++){
+      var dt = new Date(today); dt.setDate(today.getDate()+d);
+      var ds = dstr(dt);
+      var blockSet = {};
+      if (hash(ds+"|block") % 9 === 0){
+        var bId = (hash(ds+"|blkboat") % 3) + 1;
+        var bt = TIMES[hash(ds+"|blktime") % TIMES.length];
+        db.blocks.push({ id: db.nextId++, boatId:bId, dateStr:ds, time:bt,
+                         reason: BLOCK_REASONS[hash(ds+"|blkr") % BLOCK_REASONS.length] });
+        blockSet[bId+"|"+bt] = 1;
+      }
+      for (var bi=0;bi<BOATS.length;bi++){
+        for (var ti=0;ti<TIMES.length;ti++){
+          var bid = BOATS[bi].id, t = TIMES[ti];
+          if (blockSet[bid+"|"+t]) continue;
+          if (hash(ds+"|"+bid+"|"+t) % 100 < 45){
+            var m = mockBooking(ds, bid, t);
+            db.bookings.push({ id: db.nextId++, name:m.name, phone:m.phone, status:m.status, boatId:bid, dateStr:ds, time:t });
+          }
+        }
+      }
+    }
+  }
+
+  function findBooking(dateStr, boatId, t){
+    for (var i=0;i<db.bookings.length;i++){
+      var b = db.bookings[i];
+      if (b.dateStr===dateStr && b.boatId===boatId && b.time===t) return b;
+    }
+    return null;
+  }
+  function bookingById(id){
+    for (var i=0;i<db.bookings.length;i++) if (db.bookings[i].id===id) return db.bookings[i];
+    return null;
+  }
+  function findBlock(dateStr, boatId, t){
+    for (var i=0;i<db.blocks.length;i++){
+      var b = db.blocks[i];
+      if (b.dateStr===dateStr && b.boatId===boatId && b.time===t) return b;
+    }
+    return null;
+  }
+  function isSlotFree(dateStr, boatId, t){
+    return !findBooking(dateStr, boatId, t) && !findBlock(dateStr, boatId, t);
+  }
+  function freeBoatsCount(dateStr, t){
+    var n = 0;
+    for (var i=0;i<BOATS.length;i++) if (isSlotFree(dateStr, BOATS[i].id, t)) n++;
+    return n;
+  }
+  function pickFreeDefault(ds){
+    for (var i=0;i<BOATS.length;i++){
+      for (var k=0;k<TIMES.length;k++){
+        if (isSlotFree(ds, BOATS[i].id, TIMES[k])) return {boatId:BOATS[i].id, time:TIMES[k]};
+      }
+    }
+    return {boatId:BOATS[0].id, time:TIMES[0]};
+  }
+
+  /* ---------- даты ---------- */
+  var WD = ["вс","пн","вт","ср","чт","пт","сб"];
+  var MO = ["янв","фев","мар","апр","май","июн","июл","авг","сен","окт","ноя","дек"];
+  function dstr(d){ return d.getFullYear() + "-" + String(d.getMonth()+1).padStart(2,"0") + "-" + String(d.getDate()).padStart(2,"0"); }
+  function buildDays(n){
+    var days = [];
+    var today = new Date(); today.setHours(0,0,0,0);
+    for (var i=0;i<n;i++){
+      var d = new Date(today); d.setDate(today.getDate()+i);
+      days.push({date:d, str:dstr(d), isToday:(i===0)});
+    }
+    return days;
+  }
+  var DAYS = buildDays(14);
+
+  var $ = function(id){ return document.getElementById(id); };
+
+  /* ---------- toast ---------- */
+  var toastTimer = null;
+  function toast(msg){
+    var el = $("toast");
+    el.textContent = msg;
+    el.classList.add("show");
+    if (toastTimer) clearTimeout(toastTimer);
+    toastTimer = setTimeout(function(){ el.classList.remove("show"); }, 2400);
+  }
+
+  /* ---------- modal ---------- */
+  function openModal(html){
+    $("modalBox").innerHTML = html;
+    $("adminModal").classList.add("open");
+    var closeBtns = $("modalBox").querySelectorAll("[data-close]");
+    for (var i=0;i<closeBtns.length;i++){
+      closeBtns[i].addEventListener("click", closeModal);
+    }
+  }
+  function closeModal(){ $("adminModal").classList.remove("open"); }
+  $("adminModal").addEventListener("click", function(e){
+    if (e.target === $("adminModal")) closeModal();
+  });
+  document.addEventListener("keydown", function(e){ if (e.key === "Escape") closeModal(); });
+
+  function statusBadge(st){ return '<span class="status '+st+'">'+ST_LABEL[st]+'</span>'; }
+
+  /* ---------- роли и вкладки ---------- */
+  var ROLE = "admin";
+  var TAB = "schedule";
+
+  function setRole(r){
+    ROLE = r;
+    document.body.classList.toggle("role-admin", r==="admin");
+    document.body.classList.toggle("role-captain", r==="captain");
+    var btns = document.querySelectorAll(".role-tabs button");
+    for (var i=0;i<btns.length;i++) btns[i].classList.toggle("active", btns[i].getAttribute("data-role")===r);
+    renderTeam();
+  }
+  function setTab(t){
+    TAB = t;
+    var btns = document.querySelectorAll("#adminTabs button");
+    for (var i=0;i<btns.length;i++) btns[i].classList.toggle("active", btns[i].getAttribute("data-tab")===t);
+    $("tab-schedule").classList.toggle("hidden", t!=="schedule");
+    $("tab-bookings").classList.toggle("hidden", t!=="bookings");
+    $("tab-clients").classList.toggle("hidden", t!=="clients");
+    renderTeam();
+  }
+
+  /* ---------- рендер админки ---------- */
+  var teamDate = new Date(); teamDate.setHours(0,0,0,0);
+
+  function renderTeam(){
+    renderTeamDate();
+    renderWeekStrip();
+    renderTeamGrid();
+    renderTeamSummary();
+    if (TAB === "bookings") renderBookingsList();
+    if (TAB === "clients") renderClientsList();
+  }
+
+  function renderTeamDate(){
+    var label = WD[teamDate.getDay()] + ", " + teamDate.getDate() + " " + MO[teamDate.getMonth()] + " " + teamDate.getFullYear();
+    var today = new Date(); today.setHours(0,0,0,0);
+    if (dstr(teamDate) === dstr(today)) label += " · сегодня";
+    $("teamDateLabel").textContent = label;
+  }
+
+  function mondayOf(d){
+    var r = new Date(d); r.setHours(0,0,0,0);
+    var dow = (r.getDay() + 6) % 7;
+    r.setDate(r.getDate() - dow);
+    return r;
+  }
+  function renderWeekStrip(){
+    var start = mondayOf(teamDate);
+    var today = new Date(); today.setHours(0,0,0,0);
+    var html = "";
+    for (var i=0;i<7;i++){
+      var d = new Date(start); d.setDate(start.getDate()+i);
+      var ds = dstr(d);
+      var cls = "week-chip" + (ds===dstr(teamDate) ? " sel" : "") + (ds===dstr(today) ? " today" : "");
+      html += '<button class="'+cls+'" data-ds="'+ds+'">' +
+              '<span class="wd">'+WD[d.getDay()]+'</span>' +
+              '<span class="d">'+d.getDate()+'</span>' +
+              '<span class="mo">'+MO[d.getMonth()]+'</span></button>';
+    }
+    $("weekStrip").innerHTML = html;
+    var chips = $("weekStrip").querySelectorAll(".week-chip");
+    for (var j=0;j<chips.length;j++){
+      chips[j].addEventListener("click", function(){
+        teamDate = parseDS(this.getAttribute("data-ds"));
+        renderTeam();
+      });
+    }
+  }
+  function parseDS(ds){
+    var p = ds.split("-");
+    return new Date(parseInt(p[0],10), parseInt(p[1],10)-1, parseInt(p[2],10));
+  }
+
+  function renderTeamGrid(){
+    var ds = dstr(teamDate);
+    var head = '<th class="time-col">Время</th>';
+    for (var i=0;i<BOATS.length;i++) head += '<th>'+BOATS[i].name+'</th>';
+    $("teamHead").innerHTML = '<tr>'+head+'</tr>';
+
+    var body = "";
+    for (var k=0;k<TIMES.length;k++){
+      var t = TIMES[k];
+      body += '<tr><td class="time-col">'+tLabel(t)+'</td>';
+      for (var j=0;j<BOATS.length;j++){
+        var b = BOATS[j];
+        var bk = findBooking(ds, b.id, t);
+        var bl = findBlock(ds, b.id, t);
+        if (bl){
+          body += '<td class="has-blocked"><button class="cell blocked" data-k="bl:'+bl.id+'">' +
+                  '<span class="who">Занят</span><span class="ph">'+bl.reason+'</span></button></td>';
+        } else if (bk){
+          body += '<td class="has-booked s-'+bk.status+'"><button class="cell booked" data-k="bk:'+bk.id+'">' +
+                  '<span class="who">'+bk.name+'</span><span class="ph">'+bk.phone+'</span>' +
+                  statusBadge(bk.status)+'</button></td>';
+        } else {
+          body += '<td><button class="cell free" data-k="fr:'+ds+'|'+b.id+'|'+t+'">' +
+                  '<span class="who">Свободно</span></button></td>';
+        }
+      }
+      body += '</tr>';
+    }
+    $("teamBody").innerHTML = body;
+  }
+
+  function renderTeamSummary(){
+    var ds = dstr(teamDate);
+    var cnt = 0, free = 0, total = 0, rev = 0;
+    for (var k=0;k<TIMES.length;k++){
+      for (var j=0;j<BOATS.length;j++){
+        total++;
+        var bk = findBooking(ds, BOATS[j].id, TIMES[k]);
+        if (bk){ cnt++; rev += boatById(BOATS[j].id).price; }
+        else if (isSlotFree(ds, BOATS[j].id, TIMES[k])) free++;
+      }
+    }
+    var html = 'Броней на дату: <b>'+cnt+'</b> · Свободных окон: <b>'+free+' из '+total+'</b>';
+    if (ROLE === "admin") html += ' · Выручка за день (демо): <b>'+fmtMoney(rev)+'</b>';
+    html += ' <span style="opacity:.75">· Изменения действуют до перезагрузки страницы.</span>';
+    $("teamSummary").innerHTML = html;
+  }
+
+  function renderBookingsList(){
+    var ds = dstr(teamDate);
+    var rows = db.bookings.filter(function(b){ return b.dateStr===ds; });
+    rows.sort(function(a,b){ return a.time-b.time; });
+    var html = "";
+    if (rows.length === 0){
+      html = '<tr><td colspan="6" class="empty">На эту дату броней нет.</td></tr>';
+    }
+    for (var i=0;i<rows.length;i++){
+      var b = rows[i];
+      var boat = boatById(b.boatId);
+      html += '<tr><td>'+tLabel(b.time)+'</td><td>'+boat.name+'</td><td>'+b.name+'</td>' +
+              '<td><a href="tel:'+b.phone.replace(/[^+\d]/g,"")+'" style="color:var(--primary-600);text-decoration:none">'+b.phone+'</a></td>' +
+              '<td>'+statusBadge(b.status)+'</td>' +
+              '<td><button class="btn btn-mini btn-ghost" data-open="'+b.id+'">Открыть</button></td></tr>';
+    }
+    $("bookingsList").innerHTML = html;
+    var opens = $("bookingsList").querySelectorAll("[data-open]");
+    for (var j=0;j<opens.length;j++){
+      opens[j].addEventListener("click", function(){ openBookingDetail(parseInt(this.getAttribute("data-open"),10)); });
+    }
+  }
+
+  function renderClientsList(){
+    var map = {};
+    var dsNow = dstr(teamDate);
+    for (var i=0;i<db.bookings.length;i++){
+      var b = db.bookings[i];
+      var key = b.name.toLowerCase() + "|" + b.phone;
+      if (!map[key]) map[key] = { name:b.name, phone:b.phone, count:0, last:b.dateStr };
+      map[key].count++;
+      if (b.dateStr > map[key].last) map[key].last = b.dateStr;
+    }
+    var arr = Object.keys(map).map(function(k){ return map[k]; });
+    arr.sort(function(a,b){ return b.count-a.count; });
+    var html = "";
+    if (arr.length === 0) html = '<tr><td colspan="4" class="empty">Пока нет клиентов.</td></tr>';
+    for (var j=0;j<arr.length;j++){
+      var c = arr[j];
+      html += '<tr><td>'+c.name+'</td><td>'+c.phone+'</td><td>'+c.count+'</td><td>'+c.last+'</td></tr>';
+    }
+    $("clientsList").innerHTML = html;
+  }
+
+  /* ---------- модалки ---------- */
+  function openBookingDetail(id){
+    var b = bookingById(id);
+    if (!b) return;
+    var boat = boatById(b.boatId);
+    var html =
+      '<h3>Бронь ' + statusBadge(b.status) + '</h3>' +
+      '<div class="kv">' +
+        '<div class="row"><span>Катер</span><b>'+boat.name+'</b></div>' +
+        '<div class="row"><span>Дата</span><b>'+b.dateStr+'</b></div>' +
+        '<div class="row"><span>Время</span><b>'+tLabel(b.time)+'</b></div>' +
+        '<div class="row"><span>Имя</span><b>'+b.name+'</b></div>' +
+        '<div class="row"><span>Телефон</span><b>'+b.phone+'</b></div>' +
+        '<div class="row"><span>Цена</span><b>'+fmtMoney(boat.price)+'</b></div>' +
+      '</div>' +
+      '<div class="field"><label>Изменить статус</label>' +
+        '<div class="modal-actions" id="statusBtns">' +
+          '<button class="btn btn-mini btn-ghost" data-st="new">Заявка</button>' +
+          '<button class="btn btn-mini btn-ghost" data-st="confirmed">Подтверждена</button>' +
+          '<button class="btn btn-mini btn-ghost" data-st="arrived">На месте</button>' +
+          '<button class="btn btn-mini btn-ghost" data-st="done">Завершена</button>' +
+          '<button class="btn btn-mini btn-ghost" data-st="noshow">Не пришёл</button>' +
+        '</div>' +
+      '</div>' +
+      '<div class="modal-actions">' +
+        '<a class="btn btn-mini btn-primary" href="tel:'+b.phone.replace(/[^+\d]/g,"")+'">Позвонить</a>' +
+        '<button class="btn btn-mini btn-ghost" id="copyPhone">Копировать телефон</button>' +
+        '<span class="admin-only" style="display:inline-flex;gap:8px;margin-left:auto">' +
+          '<button class="btn btn-mini btn-ghost" id="moveBooking">Перенести</button>' +
+          '<button class="btn btn-mini btn-danger" id="cancelBooking">Отменить</button>' +
+        '</span>' +
+      '</div>' +
+      '<button class="btn btn-mini btn-block" style="margin-top:12px" data-close>Закрыть</button>';
+
+    openModal(html);
+
+    var stBtns = $("modalBox").querySelectorAll("[data-st]");
+    for (var i=0;i<stBtns.length;i++){
+      stBtns[i].addEventListener("click", function(){
+        b.status = this.getAttribute("data-st");
+        toast("Статус обновлён: " + ST_LABEL[b.status] + " (демо)");
+        closeModal(); renderTeam();
+      });
+    }
+    $("copyPhone").addEventListener("click", function(){
+      try {
+        navigator.clipboard.writeText(b.phone);
+        toast("Телефон скопирован");
+      } catch(e){ toast("Телефон: " + b.phone); }
+    });
+    $("moveBooking").addEventListener("click", function(){ openMoveBooking(b.id); });
+    $("cancelBooking").addEventListener("click", function(){
+      db.bookings = db.bookings.filter(function(x){ return x.id !== b.id; });
+      toast("Бронь отменена, слот освобождён (демо)");
+      closeModal(); renderTeam();
+    });
+  }
+
+  function openMoveBooking(id){
+    var b = bookingById(id);
+    if (!b) return;
+    var boatOpts = "";
+    for (var i=0;i<BOATS.length;i++) boatOpts += '<option value="'+BOATS[i].id+'"'+(BOATS[i].id===b.boatId?" selected":"")+'>'+BOATS[i].name+'</option>';
+    var timeOpts = "";
+    for (var k=0;k<TIMES.length;k++) timeOpts += '<option value="'+TIMES[k]+'"'+(TIMES[k]===b.time?" selected":"")+'>'+tLabel(TIMES[k])+'</option>';
+
+    var html =
+      '<h3>Перенести бронь</h3>' +
+      '<p class="note-muted" style="margin-top:-8px">Бронь <b>'+b.name+'</b>, '+b.dateStr+'. Свободный слот для переноса выберется из вариантов.</p>' +
+      '<div class="modal-err" id="moveErr"></div>' +
+      '<div class="field"><label>Катер</label><select id="mvBoat">'+boatOpts+'</select></div>' +
+      '<div class="field"><label>Время</label><select id="mvTime">'+timeOpts+'</select></div>' +
+      '<div class="modal-actions">' +
+        '<button class="btn btn-primary" id="mvSave">Перенести</button>' +
+        '<button class="btn btn-ghost" data-close>Отмена</button>' +
+      '</div>';
+    openModal(html);
+
+    $("mvSave").addEventListener("click", function(){
+      var nb = parseInt($("mvBoat").value,10);
+      var nt = parseInt($("mvTime").value,10);
+      var err = $("moveErr");
+      if (nb===b.boatId && nt===b.time){ closeModal(); return; }
+      if (findBooking(b.dateStr, nb, nt)){
+        err.textContent = "Слот занят. Выберите другой катер или время.";
+        err.classList.add("show");
+        return;
+      }
+      if (findBlock(b.dateStr, nb, nt)){
+        err.textContent = "Слот заблокирован. Выберите другой.";
+        err.classList.add("show");
+        return;
+      }
+      b.boatId = nb; b.time = nt;
+      toast("Бронь перенесена (демо)");
+      closeModal(); renderTeam();
+    });
+  }
+
+  function openAddBooking(dateStr, boatId, time){
+    var ds = dateStr || dstr(teamDate);
+    if (!boatId || !time){
+      var d = pickFreeDefault(ds);
+      if (!boatId) boatId = d.boatId;
+      if (!time) time = d.time;
+    }
+    var boatOpts = "";
+    for (var i=0;i<BOATS.length;i++) boatOpts += '<option value="'+BOATS[i].id+'"'+(BOATS[i].id===boatId?" selected":"")+'>'+BOATS[i].name+'</option>';
+    var timeOpts = "";
+    for (var k=0;k<TIMES.length;k++) timeOpts += '<option value="'+TIMES[k]+'"'+(TIMES[k]===time?" selected":"")+'>'+tLabel(TIMES[k])+'</option>';
+
+    var html =
+      '<h3>Добавить бронь вручную</h3>' +
+      '<p class="note-muted" style="margin-top:-8px">Создаётся вручную из звонка или с причала. Дата: <b>'+ds+'</b>.</p>' +
+      '<div class="modal-err" id="addErr"></div>' +
+      '<div class="field" id="fAddName"><label>Имя</label><input id="addName" type="text" placeholder="Как к вам обращаться"><div class="err">Укажите имя.</div></div>' +
+      '<div class="field" id="fAddPhone"><label>Телефон</label><input id="addPhone" type="tel" inputmode="tel" placeholder="+7 900 000-00-00"><div class="err">Укажите телефон (от 10 цифр).</div></div>' +
+      '<div class="field"><label>Катер</label><select id="addBoat">'+boatOpts+'</select></div>' +
+      '<div class="field"><label>Время</label><select id="addTime">'+timeOpts+'</select></div>' +
+      '<div class="modal-actions">' +
+        '<button class="btn btn-primary" id="addSave">Сохранить (демо)</button>' +
+        '<button class="btn btn-ghost" data-close>Отмена</button>' +
+      '</div>' +
+      '<p class="note-muted">Демо: бронь добавится только в макете, никуда не отправится.</p>';
+    openModal(html);
+
+    $("addSave").addEventListener("click", function(){
+      var name = $("addName").value.trim();
+      var phone = $("addPhone").value.trim();
+      var digits = phone.replace(/\D/g,"");
+      var nb = parseInt($("addBoat").value,10);
+      var nt = parseInt($("addTime").value,10);
+      var err = $("addErr");
+      var ok = true;
+      $("fAddName").classList.toggle("invalid", name.length===0);
+      $("fAddPhone").classList.toggle("invalid", digits.length<10);
+      if (name.length===0 || digits.length<10) ok = false;
+      if (ok && findBooking(ds, nb, nt)){
+        err.textContent = "Слот уже занят. Выберите другой катер или время.";
+        err.classList.add("show");
+        return;
+      }
+      if (ok && findBlock(ds, nb, nt)){
+        err.textContent = "Слот заблокирован. Выберите другой.";
+        err.classList.add("show");
+        return;
+      }
+      if (!ok) return;
+      db.bookings.push({ id: db.nextId++, name:name, phone:phone, status:"new", boatId:nb, dateStr:ds, time:nt });
+      toast("Бронь добавлена в расписание (демо)");
+      closeModal(); renderTeam();
+    });
+  }
+
+  function openBlockForm(dateStr, boatId, time){
+    var ds = dateStr || dstr(teamDate);
+    if (!boatId || !time){
+      var d = pickFreeDefault(ds);
+      if (!boatId) boatId = d.boatId;
+      if (!time) time = d.time;
+    }
+    var boatOpts = "";
+    for (var i=0;i<BOATS.length;i++) boatOpts += '<option value="'+BOATS[i].id+'"'+(BOATS[i].id===boatId?" selected":"")+'>'+BOATS[i].name+'</option>';
+    var timeOpts = "";
+    for (var k=0;k<TIMES.length;k++) timeOpts += '<option value="'+TIMES[k]+'"'+(TIMES[k]===time?" selected":"")+'>'+tLabel(TIMES[k])+'</option>';
+    var reasonOpts = "";
+    for (var r=0;r<BLOCK_REASONS.length;r++) reasonOpts += '<option>'+BLOCK_REASONS[r]+'</option>';
+
+    var html =
+      '<h3>Заблокировать слот</h3>' +
+      '<p class="note-muted" style="margin-top:-8px">Например, техобслуживание или погода. Дата: <b>'+ds+'</b>.</p>' +
+      '<div class="modal-err" id="blkErr"></div>' +
+      '<div class="field"><label>Катер</label><select id="blkBoat">'+boatOpts+'</select></div>' +
+      '<div class="field"><label>Время</label><select id="blkTime">'+timeOpts+'</select></div>' +
+      '<div class="field"><label>Причина</label><select id="blkReason">'+reasonOpts+'</select></div>' +
+      '<div class="modal-actions">' +
+        '<button class="btn btn-primary" id="blkSave">Заблокировать (демо)</button>' +
+        '<button class="btn btn-ghost" data-close>Отмена</button>' +
+      '</div>';
+    openModal(html);
+
+    $("blkSave").addEventListener("click", function(){
+      var nb = parseInt($("blkBoat").value,10);
+      var nt = parseInt($("blkTime").value,10);
+      var reason = $("blkReason").value;
+      var err = $("blkErr");
+      if (findBooking(ds, nb, nt)){
+        err.textContent = "Слот уже занят броней. Сначала перенесите или отмените её.";
+        err.classList.add("show");
+        return;
+      }
+      if (findBlock(ds, nb, nt)){
+        err.textContent = "Слот уже заблокирован.";
+        err.classList.add("show");
+        return;
+      }
+      db.blocks.push({ id: db.nextId++, boatId:nb, dateStr:ds, time:nt, reason:reason });
+      toast("Слот заблокирован: " + reason + " (демо)");
+      closeModal(); renderTeam();
+    });
+  }
+
+  function openBlockDetail(id){
+    var bl = null;
+    for (var i=0;i<db.blocks.length;i++) if (db.blocks[i].id===id) bl = db.blocks[i];
+    if (!bl) return;
+    var boat = boatById(bl.boatId);
+    var html =
+      '<h3>Заблокировано</h3>' +
+      '<div class="kv">' +
+        '<div class="row"><span>Катер</span><b>'+boat.name+'</b></div>' +
+        '<div class="row"><span>Дата</span><b>'+bl.dateStr+'</b></div>' +
+        '<div class="row"><span>Время</span><b>'+tLabel(bl.time)+'</b></div>' +
+        '<div class="row"><span>Причина</span><b>'+bl.reason+'</b></div>' +
+      '</div>' +
+      '<div class="modal-actions admin-only">' +
+        '<button class="btn btn-primary" id="unblock">Снять блокировку</button>' +
+        '<button class="btn btn-ghost" data-close>Закрыть</button>' +
+      '</div>' +
+      '<div class="modal-actions role-captain-only">' +
+        '<button class="btn btn-ghost" data-close>Закрыть</button>' +
+      '</div>';
+    openModal(html);
+    var ub = $("modalBox").querySelector("#unblock");
+    if (ub) ub.addEventListener("click", function(){
+      db.blocks = db.blocks.filter(function(x){ return x.id!==bl.id; });
+      toast("Блокировка снята, слот свободен (демо)");
+      closeModal(); renderTeam();
+    });
+  }
+
+  function openFreeActions(dateStr, boatId, time){
+    var boat = boatById(boatId);
+    var html =
+      '<h3>Свободный слот</h3>' +
+      '<div class="kv">' +
+        '<div class="row"><span>Катер</span><b>'+boat.name+'</b></div>' +
+        '<div class="row"><span>Дата</span><b>'+dateStr+'</b></div>' +
+        '<div class="row"><span>Время</span><b>'+tLabel(time)+'</b></div>' +
+        '<div class="row"><span>Цена</span><b>'+fmtMoney(boat.price)+' · оплата на месте</b></div>' +
+      '</div>' +
+      '<div class="modal-actions admin-only">' +
+        '<button class="btn btn-primary" id="frAdd">Добавить бронь</button>' +
+        '<button class="btn btn-ghost" id="frBlock">Заблокировать</button>' +
+        '<button class="btn btn-ghost" data-close>Закрыть</button>' +
+      '</div>' +
+      '<div class="modal-actions role-captain-only">' +
+        '<button class="btn btn-ghost" data-close>Закрыть</button>' +
+      '</div>' +
+      '<p class="note-muted role-captain-only">В режиме капитана брони и блокировки создаёт администратор.</p>';
+    openModal(html);
+    var add = $("modalBox").querySelector("#frAdd");
+    if (add) add.addEventListener("click", function(){ openAddBooking(dateStr, boatId, time); });
+    var blk = $("modalBox").querySelector("#frBlock");
+    if (blk) blk.addEventListener("click", function(){ openBlockForm(dateStr, boatId, time); });
+  }
+
+  /* ---------- клики по ячейкам расписания ---------- */
+  $("teamBody").addEventListener("click", function(e){
+    var cell = e.target.closest(".cell");
+    if (!cell) return;
+    var k = cell.getAttribute("data-k");
+    if (!k) return;
+    var p = k.split(":");
+    var type = p[0], val = p[1];
+    if (type === "bk"){
+      openBookingDetail(parseInt(val,10));
+    } else if (type === "bl"){
+      openBlockDetail(parseInt(val,10));
+    } else {
+      var parts = val.split("|");
+      var ds = parts[0], bid = parseInt(parts[1],10), t = parseInt(parts[2],10);
+      openFreeActions(ds, bid, t);
+    }
+  });
+
+  /* ---------- клиентский мастер ---------- */
+  var S = { step:1, dateStr:null, time:null, boatId:null };
+
+  function setStep(n){
+    S.step = n;
+    for (var i=1;i<=5;i++) $("step"+i).classList.toggle("hidden", i!==n);
+    for (var p=1;p<=4;p++){
+      var el = $("ps"+p);
+      el.classList.toggle("active", p===n);
+      el.classList.toggle("done", p<n);
+    }
+  }
+
+  function renderDates(){
+    var el = $("dateChips");
+    var html = "";
+    for (var i=0;i<DAYS.length;i++){
+      var d = DAYS[i];
+      var ddate = d.date;
+      var sel = (S.dateStr===d.str) ? " sel" : "";
+      var wd = d.isToday ? "Сегодня" : WD[ddate.getDay()];
+      html += '<button class="date-chip'+sel+'" data-date="'+d.str+'">' +
+              '<span class="wd">'+wd+'</span>' +
+              '<span class="d">'+ddate.getDate()+'</span>' +
+              '<span class="mo">'+MO[ddate.getMonth()]+'</span></button>';
+    }
+    el.innerHTML = html;
+    var btns = el.querySelectorAll(".date-chip");
+    for (var j=0;j<btns.length;j++){
+      btns[j].addEventListener("click", function(){
+        S.dateStr = this.getAttribute("data-date");
+        S.time = null; S.boatId = null;
+        renderDates();
+        $("toStep2").disabled = false;
+      });
+    }
+  }
+
+  function renderSlots(){
+    var el = $("slotGrid");
+    var html = "";
+    for (var i=0;i<TIMES.length;i++){
+      var t = TIMES[i];
+      var free = freeBoatsCount(S.dateStr, t);
+      var cls = free>0 ? "free" : "busy";
+      var sel = (S.time===t) ? " sel" : "";
+      var badge = free>0 ? ("свободно · " + free + (free===1?" катер":" катера")) : "занято";
+      html += '<button class="slot '+cls+sel+'" data-t="'+t+'" ' + (free>0?"":"disabled") + '>' +
+              '<span>'+tLabel(t)+'</span><span class="st">'+badge+'</span></button>';
+    }
+    el.innerHTML = html;
+    var btns = el.querySelectorAll(".slot:not([disabled])");
+    for (var j=0;j<btns.length;j++){
+      btns[j].addEventListener("click", function(){
+        S.time = parseInt(this.getAttribute("data-t"),10);
+        S.boatId = null;
+        renderSlots();
+        $("toStep3").disabled = false;
+      });
+    }
+  }
+
+  function renderBoats(){
+    $("step3Sub").textContent = S.dateStr + ", " + tLabel(S.time) + " · поездка 2 часа";
+    var el = $("boatRows");
+    var html = "";
+    for (var i=0;i<BOATS.length;i++){
+      var b = BOATS[i];
+      var free = isSlotFree(S.dateStr, b.id, S.time);
+      var cls = free ? "free" : "busy";
+      var sel = (S.boatId===b.id) ? " sel" : "";
+      var badge = free ? "Свободен" : "Занят";
+      html += '<button class="boat-row '+cls+sel+'" data-id="'+b.id+'" ' + (free?"":"disabled") + '>' +
+              '<span><span class="nm">'+b.name+'</span><br><span class="pr">'+fmtMoney(b.price)+' · 2 часа</span></span>' +
+              '<span class="st">'+badge+'</span></button>';
+    }
+    el.innerHTML = html;
+    var btns = el.querySelectorAll(".boat-row:not([disabled])");
+    for (var j=0;j<btns.length;j++){
+      btns[j].addEventListener("click", function(){
+        S.boatId = parseInt(this.getAttribute("data-id"),10);
+        renderBoats();
+        $("toStep4").disabled = false;
+      });
+    }
+    var hasFree = el.querySelector(".boat-row.free");
+    $("autoBoat").disabled = !hasFree;
+  }
+
+  function renderSummary(){
+    var b = boatById(S.boatId);
+    $("formSummary").innerHTML =
+      '<span><b>Дата:</b> ' + S.dateStr + '</span>' +
+      '<span><b>Время:</b> ' + tLabel(S.time) + '</span>' +
+      '<span><b>Катер:</b> ' + b.name + '</span>' +
+      '<span><b>Цена:</b> ' + fmtMoney(b.price) + ' · оплата на месте</span>';
+  }
+
+  function showConfirmation(){
+    var b = boatById(S.boatId);
+    $("confCard").innerHTML =
+      '<div class="row"><span>Катер</span><b>'+b.name+'</b></div>' +
+      '<div class="row"><span>Дата</span><b>'+S.dateStr+'</b></div>' +
+      '<div class="row"><span>Время</span><b>'+tLabel(S.time)+'</b></div>' +
+      '<div class="row"><span>Длительность</span><b>2 часа</b></div>' +
+      '<div class="row"><span>Цена</span><b>'+fmtMoney(b.price)+'</b></div>' +
+      '<div class="row"><span>Отправление</span><b>Причал, адрес уточняется</b></div>';
+  }
+
+  function renderBoatsSection(){
+    var el = $("boatsList");
+    var html = "";
+    for (var i=0;i<BOATS.length;i++){
+      var b = BOATS[i];
+      html += '<div class="boat-card">' +
+        '<img class="boat-photo" src="img/kater'+b.id+'.jpg" alt="'+b.name+'" loading="lazy">' +
+        '<div class="boat-body">' +
+          '<h3>'+b.name+'</h3>' +
+          '<div class="boat-specs">' +
+            '<span>Вместимость: <b>'+b.cap+'</b></span>' +
+            '<span>Длительность аренды: <b>от 2 часов</b></span>' +
+          '</div>' +
+          '<div class="boat-price">'+fmtMoney(b.price)+' <small>'+PRICE_NOTE+'</small></div>' +
+          '<a class="btn btn-primary" href="#booking">Посмотреть свободное время</a>' +
+        '</div></div>';
+    }
+    el.innerHTML = html;
+  }
+  function renderPrice(){
+    var el = $("priceRows");
+    var html = "";
+    for (var i=0;i<BOATS.length;i++){
+      var b = BOATS[i];
+      html += '<tr><td>'+b.name+'</td><td>2 часа</td><td>'+fmtMoney(b.price)+'</td></tr>';
+    }
+    el.innerHTML = html;
+  }
+
+  /* ---------- переключение клиент / команда ---------- */
+  function showTeam(show){
+    document.body.classList.toggle("show-team", show);
+    window.scrollTo(0,0);
+    if (show) renderTeam();
+  }
+
+  /* ---------- инициализация ---------- */
+  function init(){
+    seedDb();
+
+    renderBoatsSection();
+    renderPrice();
+    renderDates();
+    setStep(1);
+
+    $("toStep2").addEventListener("click", function(){ renderSlots(); setStep(2); });
+    $("backToStep1").addEventListener("click", function(){ renderDates(); setStep(1); });
+    $("toStep3").addEventListener("click", function(){ renderBoats(); setStep(3); });
+    $("backToStep2").addEventListener("click", function(){ renderSlots(); setStep(2); });
+    $("toStep4").addEventListener("click", function(){ renderSummary(); setStep(4); });
+    $("backToStep3").addEventListener("click", function(){ renderBoats(); setStep(3); });
+
+    $("autoBoat").addEventListener("click", function(){
+      for (var i=0;i<BOATS.length;i++){
+        if (isSlotFree(S.dateStr, BOATS[i].id, S.time)){ S.boatId = BOATS[i].id; break; }
+      }
+      renderBoats();
+      $("toStep4").disabled = false;
+    });
+
+    $("contactForm").addEventListener("submit", function(e){
+      e.preventDefault();
+      var okName = $("inpName").value.trim().length > 0;
+      var digits = $("inpPhone").value.replace(/\D/g,"");
+      var okPhone = digits.length >= 10;
+      $("fName").classList.toggle("invalid", !okName);
+      $("fPhone").classList.toggle("invalid", !okPhone);
+      if (okName && okPhone){
+        showConfirmation();
+        setStep(5);
+      }
+    });
+
+    $("restart").addEventListener("click", function(){
+      S.dateStr=null; S.time=null; S.boatId=null;
+      $("toStep2").disabled = true; $("toStep3").disabled = true; $("toStep4").disabled = true;
+      $("inpName").value=""; $("inpPhone").value="";
+      $("fName").classList.remove("invalid"); $("fPhone").classList.remove("invalid");
+      renderDates();
+      setStep(1);
+    });
+
+    /* админка */
+    setRole("admin");
+
+    var roleBtns = document.querySelectorAll(".role-tabs button");
+    for (var r=0;r<roleBtns.length;r++){
+      roleBtns[r].addEventListener("click", function(){ setRole(this.getAttribute("data-role")); });
+    }
+    var tabBtns = document.querySelectorAll("#adminTabs button");
+    for (var t=0;t<tabBtns.length;t++){
+      tabBtns[t].addEventListener("click", function(){ setTab(this.getAttribute("data-tab")); });
+    }
+
+    $("teamLink").addEventListener("click", function(e){ e.preventDefault(); showTeam(true); });
+    $("adminLink").addEventListener("click", function(e){ e.preventDefault(); showTeam(true); });
+    $("teamBack").addEventListener("click", function(e){ e.preventDefault(); showTeam(false); });
+    $("teamPrev").addEventListener("click", function(){ teamDate.setDate(teamDate.getDate()-1); renderTeam(); });
+    $("teamNext").addEventListener("click", function(){ teamDate.setDate(teamDate.getDate()+1); renderTeam(); });
+    $("teamToday").addEventListener("click", function(){ teamDate = new Date(); teamDate.setHours(0,0,0,0); renderTeam(); });
+
+    $("btnAddBooking").addEventListener("click", function(){ openAddBooking(null, null, null); });
+    $("btnBlockSlot").addEventListener("click", function(){ openBlockForm(null, null, null); });
+  }
+
+  document.addEventListener("DOMContentLoaded", init);
+})();
+</script>
+</body>
+</html>
