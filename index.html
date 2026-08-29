@@ -239,6 +239,18 @@
   .conf-card .row b{color:var(--ink);text-align:right}
   .conf-extra{margin-top:14px;font-size:14px;color:var(--muted);text-align:center}
 
+  /* ---------- связь с живым человеком ---------- */
+  .contact-card{
+    background:var(--card);border:1px solid var(--line);border-top:4px solid var(--accent);
+    border-radius:var(--radius);padding:28px 20px;text-align:center;
+    max-width:560px;margin:0 auto;
+  }
+  .contact-card h2{margin:0 0 8px;font-size:22px}
+  .contact-card .contact-lead{margin:0 0 20px;color:var(--muted);font-size:15px}
+  .btn-call{font-size:20px;padding:16px 28px}
+  .btn-call .call-who{font-size:15px;opacity:.85;font-weight:600}
+  .contact-card .contact-note{margin:12px 0 0;font-size:13.5px;color:var(--muted)}
+
   /* ---------- location ---------- */
   .loc{display:grid;gap:14px}
   .loc-card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);overflow:hidden}
@@ -575,6 +587,24 @@
               <a class="btn btn-primary" href="#top">На главную</a>
             </div>
           </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8.5 Связь с живым человеком (запасной вариант) -->
+    <section id="contact">
+      <div class="wrap">
+        <div class="contact-card">
+          <h2>Не получилось забронировать онлайн?</h2>
+          <p class="contact-lead">Обычно достаточно выбрать дату, время и катер на сайте. Но если что-то не сработало, есть вопрос или хочется поговорить с живым человеком — позвоните Леониду, он подберёт время и ответит на вопросы.</p>
+          <a class="btn btn-accent btn-call" href="tel:+79508992705">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+              <path d="M22 16.9v3a2 2 0 0 1-2.2 2 19.8 19.8 0 0 1-8.6-3.1 19.5 19.5 0 0 1-6-6A19.8 19.8 0 0 1 2.1 4.2 2 2 0 0 1 4.1 2h3a2 2 0 0 1 2 1.7c.1 1 .4 2 .7 2.9a2 2 0 0 1-.5 2.1L8.1 10a16 16 0 0 0 6 6l1.3-1.3a2 2 0 0 1 2.1-.4c.9.3 1.9.6 2.9.7a2 2 0 0 1 1.6 1.9Z"/>
+            </svg>
+            +7 950 899-27-05
+            <span class="call-who">· Леонид</span>
+          </a>
+          <p class="contact-note">Нажмите, чтобы позвонить. По телефону можно уточнить детали и забронировать время.</p>
         </div>
       </div>
     </section>
